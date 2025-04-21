@@ -30,11 +30,23 @@ export class editUserDto {
   password?: string;
 }
 export class upLoadPodcastDto{
+  @IsString()
   title: string;
-  description: string;
-  image: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  image?: string;
+
+  @IsOptional()
   @IsString()
   Audiourl?: string;
+  
+  @IsString()
+  category: string;
   // episodes: number;
 }
 // export class deleteUserDto {

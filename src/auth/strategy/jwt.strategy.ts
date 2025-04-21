@@ -42,7 +42,7 @@ export class JwtStrategy extends PassportStrategy(
         },
       });
     if (!user) {
-      return new UnauthorizedException(
+      throw new UnauthorizedException(
         'User not found',
       );
     }

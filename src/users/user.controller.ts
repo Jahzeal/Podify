@@ -1,11 +1,12 @@
 import { Controller } from '@nestjs/common';
-import { Get,Patch,Body, Delete} from '@nestjs/common/decorators';
+import { Get,Patch,Body, Delete, Post} from '@nestjs/common/decorators';
 import {User } from '@prisma/client';
 import { GetUser } from 'src/auth/decorator';
 import { UserService } from './user.service';
 import { JwtAuthGuard } from '../auth/guard/jwt.guard';
 import { UseGuards } from '@nestjs/common/decorators';
 import { editUserDto } from './dto/users.dto';
+import {upLoadPodcastDto}from './dto/users.dto'
 import { use } from 'passport';
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -17,7 +18,7 @@ export class UsersController {
     console.log(user.FirstName);
     return user;
   }
-
+  @UseGuards(JwtAuthGuard)
   @Get('podcasts')
   getPodcasts(@GetUser('id') userId: number) {
     return this.userService.getuserPodcasts(userId);
@@ -43,5 +44,9 @@ export class UsersController {
   @Delete('DeleteUserEpisode/:episodeId')
   deleteEpisdode(@GetUser('id')userId: number, @Body('episodeId') episodeId: number) {
     return this.userService.deleteUserEpisodes(episodeId);
+  }
+  @Post('upload-podcast')
+  upLoadPodcast(@GetUser('id') userId: number, @Body() dto: upLoadPodcastDto) {
+    return this.userService.upLoadPodcast(userId, dto);
   }
 }

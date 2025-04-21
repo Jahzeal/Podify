@@ -17,18 +17,60 @@ export class UserService {
     }
     return user
   }
-  async upLoadPodcast(userId: number, dto: upLoadPodcastDto) { 
+  
+  async upLoadPodcast(userId: number, dto: upLoadPodcastDto) {
+    const { title, description, image, Audiourl, category } = dto;
+  
+    const foundCategory = await this.prisma.category.findUnique({
+      where: { name: category },
+    });
+  
+    if (!foundCategory) {
+      throw new Error('Category not found');
+    }
+  
     const podcast = await this.prisma.podcast.create({
+      data: {
+        title,
+        description,
+        image,
+        url: Audiourl,
+        userId,
+        categoryId: foundCategory.id,
+      },
+    });
+  
+    return podcast;
+  }
+
+  async uploadEpisode(userId: number, dto: any) {
+    const episode = await this.prisma.episode.create({
       data: {
         ...dto,
         userId: userId,
       },
     })
-    if (!podcast) {
-      throw new Error('Podcast not found');
+    if (!episode) {
+      throw new Error('Episode not found');
     }
-    return podcast
+    return episode
   }
+
+  async assignEpisodeToPodcast(episodeId: number, podcastId: number) {
+    const episode = await this.prisma.episode.update({
+      where: {
+        id: episodeId,
+      },
+      data: {
+        podcastId: podcastId,
+      },
+    })
+    if (!episode) {
+      throw new Error('Episode not found');
+    }
+    return episode
+  }
+
   
   getuserPodcasts(userId: number) {
     const podcasts = this.prisma.podcast.findMany({

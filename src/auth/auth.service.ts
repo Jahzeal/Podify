@@ -80,14 +80,12 @@ export class AuthService {
         email: dto.email,
       },  
     });
-  
     if (!user) {
       throw new ForbiddenException('Credentials incorrect');
     }
     console.log("love"+dto.password);
 
     const hash = await argon.hash(dto.password);
-  
     await this.Prisma.user.update({
       where: {
         email: dto.email,

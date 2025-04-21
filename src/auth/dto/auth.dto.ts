@@ -10,11 +10,11 @@ export class AuthDto {
   password: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   FirstName: string;
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   LastName: string;
 
   @IsString()
