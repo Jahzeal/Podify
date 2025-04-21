@@ -8,7 +8,9 @@ export const GetUser = createParamDecorator(
     if(data) {
       return data ? request.user?.[data] : request.user;
     }
-    return request.user;
+    console.log(request.user);
+    return request.user
+    
   },
 );
 

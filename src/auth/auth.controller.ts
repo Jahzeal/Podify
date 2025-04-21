@@ -1,6 +1,9 @@
 import { Controller, Post,Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guard/jwt.guard';
+// @UseGuards(JwtAuthGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) { }
@@ -22,6 +25,12 @@ export class AuthController {
   verifyEmail(@Body() dto: AuthDto) {
     return this.authService.verifyEmail(dto);
   }
+
+  @Post('delete-account')
+  deleteAccount(@Body() dto: AuthDto) {
+    return this.authService.deleteAccount(dto);
+  }
+  
   @Post('resend-verification-email')
   resendVerificationEmail(@Body() dto: AuthDto) {
     return this.authService.resendVerificationEmail(dto);

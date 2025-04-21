@@ -2,7 +2,9 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  
 } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { AuthDto } from './dto/auth.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from 'generated/prisma';
@@ -18,6 +20,7 @@ export class AuthService {
   ) {}
 
   async signup(dto: AuthDto) {
+    console.log('DATABASE_URL =', process.env.DATABASE_URL);
     const hash = await argon.hash(dto.password);
     try {
       const user = await this.Prisma.user.create({
@@ -32,8 +35,7 @@ export class AuthService {
       return this.signToken(user.id, user.email); // Return the created user
     } catch (error) {
       if (
-        error instanceof
-        Prisma.PrismaClientKnownRequestError
+        error instanceof PrismaClientKnownRequestError
       ) {
         if (error.code === 'P2002') {
           throw new ForbiddenException(
@@ -41,6 +43,7 @@ export class AuthService {
           ); // Handle unique constraint violation
         }
       }
+      console.log("error", error);
       throw new InternalServerErrorException(
         'An error occurred during signup',
       ); // Rethrow other errors
@@ -48,6 +51,7 @@ export class AuthService {
   }
 
   async signin(dto: AuthDto) {
+    console.log('DATABASE_URL =', process.env.DATABASE_URL);
     const user =
       await this.Prisma.user.findUnique({
         where: {
@@ -74,7 +78,7 @@ export class AuthService {
     const user = await this.Prisma.user.findUnique({
       where: {
         email: dto.email,
-      },
+      },  
     });
   
     if (!user) {
@@ -126,10 +130,35 @@ export class AuthService {
       access_token: token
     };
   }
+
+
   resendVerificationEmail(dto: AuthDto) {
     return {
       message:
         'Verification email resent successfully',
+    };
+  }
+
+
+  async deleteAccount(dto: AuthDto) {
+    const user = await this.Prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+    if (!user) {
+      throw new ForbiddenException(
+        'Credentials incorrect',
+      );
+    }
+    await this.Prisma.user.delete({
+      where: {
+        email: dto.email,
+      },
+    });
+    return {
+      message:
+        'Account deleted successfully',
     };
   }
 
