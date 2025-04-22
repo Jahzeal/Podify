@@ -96,9 +96,9 @@ export class UserService {
     return episodes
   }
 
-  editUser(userId: number, dto: editUserDto) {
+  async editUser(userId: number, dto: editUserDto) {
     console.log("userid", userId);
-    const user = this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: {
         id: userId,
       },

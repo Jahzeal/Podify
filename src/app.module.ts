@@ -5,7 +5,6 @@ import { CategoriesModule } from './categories/categories.module';
 import { PodcastsModule } from './podcasts/podcasts.module';
 import { EpisodesModule } from './episodes/episodes.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -19,7 +18,6 @@ import { ConfigModule } from '@nestjs/config';
     PodcastsModule,
     EpisodesModule,
     PrismaModule,
-    SearchModule,
   ],
 })
 export class AppModule {}

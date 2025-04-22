@@ -19,7 +19,7 @@ export class editUserDto {
 
   @IsString()
   @IsOptional()
-  Username?: string;
+  username?: string;
 
   @IsString()
   @IsOptional()
@@ -44,7 +44,7 @@ export class upLoadPodcastDto{
   @IsOptional()
   @IsString()
   Audiourl?: string;
-  
+
   @IsString()
   category: string;
   // episodes: number;
